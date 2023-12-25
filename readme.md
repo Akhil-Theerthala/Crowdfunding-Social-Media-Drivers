@@ -15,7 +15,9 @@ Note: The project can be extended to further study how different social media ch
 ## Files
 
 The project contains the following files:
+
 ![Alt text](doc_utils/image.png)
 
-The Data Folder is further divided into the following subfolders:
-![Alt text](doc_utils/DATA folder structure.png)
+The Data Folder is the place where all the EDA and data processing is done. It is further divided into the following subfolders:
+
+![Alt text](doc_utils/data_folder_structure.png)
