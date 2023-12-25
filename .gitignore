@@ -2,3 +2,5 @@
 Reference Code/*
 crowdenv/*
 Data/Original_dataset/lda_models/*
+!Data/Original_dataset/lda_models/11_topics/
+!Data/Original_dataset/followers_model.pkl
