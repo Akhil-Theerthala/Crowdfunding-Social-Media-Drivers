@@ -4,10 +4,6 @@ crowdenv/*
 Data/Original_dataset/lda_models/*
 !Data/Original_dataset/lda_models/11_topics/
 !Data/Original_dataset/followers_model.pkl
-
+!Modelling/Enagement_prediction/*
 */__pycache__/*
 */.ipynb_checkpoints/*
-
-
-!/workspaces/Crowdfunding-Social-Media-Drivers/Modelling/Enagement_prediction/xgBoost.pkl
-!/workspaces/Crowdfunding-Social-Media-Drivers/Modelling/Enagement_prediction/RandomForest.pkl
