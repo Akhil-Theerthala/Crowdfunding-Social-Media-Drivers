@@ -5,56 +5,73 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import RobustScaler
 from sklearn.inspection import permutation_importance, PartialDependenceDisplay
-from sklearn.metrics import mean_squared_error, r2_score, mean_squared_log_error, explained_variance_score, classification_report
+from sklearn import metrics
 
 target_cols = []
 
-# def evaluate_model_performance(y_test, pred, mode = 'regression'):
-#     target_cols = ['likes', 'shares', 'comments', 'positive_reactions', 'negative_reactions']
-#     engagement_scores = []
-#     for i in range(5):
+def evaluate_model_performance(y_test, pred, target_cols=None , mode = 'regression'):
+    engagement_scores = []
+    try:
+        n_outputs = y_test.shape[1]
+    except IndexError:
+        n_outputs = 1
         
-#         mse = mean_squared_error(
-#             y_true=y_test.values[:,i], 
-#             y_pred=pred[:,i]
-#             )
-#         rmse = np.sqrt(mse)
+    for i in range(n_outputs):
+        mse = metrics.mean_squared_error(
+            y_true=y_test.values[:,i], 
+            y_pred=pred[:,i]
+            )
+        rmse = np.sqrt(mse)
 
-#         if mode == 'regression':
-#             score_cols = ['RMSE', 'R2', 'MSLE', 'EV Score']
-#             r2 = r2_score(
-#                 y_pred=pred[:,i],
-#                 y_true=y_test.values[:,i]
-#                 )
+        if mode == 'regression':
+            score_cols = ['RMSE', 'R2', 'MSLE', 'EV Score']
+            r2 = metrics.r2_score(
+                y_pred=pred[:,i],
+                y_true=y_test.values[:,i]
+                )
                 
-#             msle = mean_squared_log_error(
-#                 y_pred=pred[:,i],
-#                 y_true=y_test.values[:,i]
-#                 )
+            msle = metrics.mean_squared_log_error(
+                y_pred=pred[:,i],
+                y_true=y_test.values[:,i]
+                )
 
-#             ev_score = explained_variance_score(
-#                 y_pred=pred[:,i],
-#                 y_true=y_test.values[:,i]
-#             )
+            ev_score = metrics.explained_variance_score(
+                y_pred=pred[:,i],
+                y_true=y_test.values[:,i]
+            )
 
-#             engagement_scores.append([rmse, r2, msle, ev_score])
+            engagement_scores.append([rmse, r2, msle, ev_score])
 
-#         elif mode == 'classification':
-#             report_dict = classification_report(
-#                 y_true=y_test.values[:,i],
-#                 y_pred=pred[:,i]
-#             )
-#             score_cols = ['Precision', 'Recall', 'F1-Score']
+        elif mode == 'classification':
+            score_cols = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
+            accuracy = metrics.accuracy_score(
+                y_pred=pred[:,i],
+                y_true=y_test.values[:,i]
+                )
+            
+            precision = metrics.precision_score(
+                y_pred=pred[:,i],
+                y_true=y_test.values[:,i]
+                )
+            
+            recall = metrics.recall_score(
+                y_pred=pred[:,i],
+                y_true=y_test.values[:,i]
+                )
+            
+            f1_score = metrics.f1_score(
+                y_pred=pred[:,i],
+                y_true=y_test.values[:,i]
+                )
+            
+            engagement_scores.append([accuracy, precision, recall, f1_score])
 
-#             engagement_scores 
 
-
-
-#     engagement_scores = pd.DataFrame(engagement_scores, 
-#                                      columns=score_cols, 
-#                                      index=target_cols)
+    engagement_scores = pd.DataFrame(engagement_scores, 
+                                     columns=score_cols, 
+                                     index=target_cols)
     
-#     return engagement_scores
+    return engagement_scores
 
 def save_model(model, name):
     save_path = '/workspaces/Crowdfunding-Social-Media-Drivers/Modelling/02_success_engagement/'
