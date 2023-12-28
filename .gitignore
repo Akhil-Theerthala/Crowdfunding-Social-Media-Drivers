@@ -7,3 +7,4 @@ Data/Original_dataset/lda_models/*
 !Modelling/Enagement_prediction/*
 */__pycache__/*
 */.ipynb_checkpoints/*
+!Modelling/02_success_engagement/*.pkl

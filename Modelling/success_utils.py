@@ -94,7 +94,7 @@ def decode_targets(y):
     y = np.exp(y)-1
     return y
 
-def plot_permutation_importance(model, test_inputs, test_outputs):
+def plot_permutation_importance(model, test_inputs, test_outputs, imp_columns):
 
     importance = permutation_importance(
         model,
@@ -107,7 +107,7 @@ def plot_permutation_importance(model, test_inputs, test_outputs):
 
     importance_df= pd.DataFrame(
         data=importance.importances_mean,
-        index=test_inputs.columns,
+        index=imp_columns,
         columns=['Importance']
     ).sort_values(by='Importance', ascending=False)
 
