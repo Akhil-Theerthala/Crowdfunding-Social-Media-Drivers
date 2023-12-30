@@ -107,7 +107,7 @@ def plot_permutation_importance(model, test_inputs, test_outputs):
     plt.title('Permutation Importance')
     plt.ylabel('Importance')
     
-    plt.savefig('/workspaces/Crowdfunding-Social-Media-Drivers/Results/engagement_results/feature_importance.png')
+    plt.savefig('/workspaces/Crowdfunding-Social-Media-Drivers/Results/01_engagement_results/feature_importance.png')
 
     return importance_df
 
@@ -133,7 +133,7 @@ def get_partial_dependence_plot(model, features, x, y, feature_name, categirical
     )
 
     fig.suptitle(f'Partial dependence plots for {target_cols[y]}')
-    save_dir = f'/workspaces/Crowdfunding-Social-Media-Drivers/Results/engagement_results/{feature_name}/'
+    save_dir = f'/workspaces/Crowdfunding-Social-Media-Drivers/Results/01_engagement_results/{feature_name}/'
     
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
@@ -157,7 +157,7 @@ def save_all_plots(model, x, y):
 
     top_15_imp = imp_df.head(15).index.to_list()
     topic_cols = ['topic_0', 'topic_1', 'topic_2', 'topic_3', 'topic_4', 'topic_5',
-                  'topic_6', 'topic_7', 'topic_8', 'topic_9', 'topic_10']
+                  'topic_6', 'topic_7', 'topic_8', 'topic_9', 'topic_10', 'topic_11']
 
     categorical_features = ['post_sponsored', 'type_photo', 'type_video',
         'page_name_GoFundMe', 'page_name_Indiegogo', 'page_name_Kickstarter',
