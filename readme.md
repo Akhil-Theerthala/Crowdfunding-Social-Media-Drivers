@@ -12,6 +12,7 @@ The project uses data from social media posts of crowdfunding projects, specific
 
 Note: The project can be extended to further study how different social media characteristics impact project success and engagement.
 
+
 ## Files
 
 The project contains the following files:
@@ -21,3 +22,16 @@ The project contains the following files:
 The Data Folder is the place where all the EDA and data processing is done. It is further divided into the following subfolders:
 
 ![Alt text](doc_utils/data_folder_structure.png)
+
+
+# Modelling
+
+## Latent Dirchlet Allocation
+
+The project uses Latent Dirchlet Allocation (LDA) to extract topics from the text of the social media posts. The topics are then used as features in the model. The Metrics considered for the LDA model are:
+* Coherence Score
+* Log-Perplexity Score
+* Topic Diversity
+
+The following are the scores recorded for the varying number of topics:
+![Alt text](image.png)
