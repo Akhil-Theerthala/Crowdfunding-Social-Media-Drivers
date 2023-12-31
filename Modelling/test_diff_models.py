@@ -13,11 +13,13 @@ warnings.filterwarnings('ignore')
 
 
 class RegressionModels:
-    def __init__(self, x_train, x_test, y_train, y_test):
+    def __init__(self, x_train, x_test, y_train, y_test, decode = True):
         self.x_train = x_train
         self.y_train = y_train
         self.x_test = x_test
         self.y_test = y_test
+
+        self.decode_input = decode
 
         if self.y_train.ndim > 1:
             self.multioutput = True
@@ -103,7 +105,8 @@ class RegressionModels:
                 trained_models.items(), desc="Evaluating models"):
             try:
                 y_pred = model.predict(self.x_test)
-                y_pred = self.decode_targets(y_pred)
+                if self.decode_input:
+                    y_pred = self.decode_targets(y_pred)
 
                 overall_rmse = np.sqrt(mean_squared_error(self.y_test, y_pred))
                 overall_mae = mean_absolute_error(self.y_test, y_pred)
@@ -148,10 +151,18 @@ class RegressionModels:
         model_scores = self.evaluate_models(trained_models)
         model_scores = self.format_scores(model_scores)
 
-        self.not_evaluated_ = 'The models ' + \
-            ', '.join(list(set(self.not_evaluated_))) + ' could not be evaluated.'
-        self.not_trained_ = 'The models ' + \
-            ', '.join(list(set(self.not_trained_))) + ' could not be trained.'
+        if len(self.not_evaluated_) > 0:    
+            self.not_evaluated_ = 'The models ' + \
+                ', '.join(list(set(self.not_evaluated_))) + ' could not be evaluated.'
+        else:
+            self.not_evaluated_ = 'All models were evaluated successfully.'
+
+        if len(self.not_trained_) > 0:
+            self.not_trained_ = 'The models ' + \
+                ', '.join(list(set(self.not_trained_))) + ' could not be trained.'
+        else:
+            self.not_trained_ = 'All models were trained successfully.'
+
 
         self.top_10_socres = model_scores.head(10)
         self.all_scores = model_scores
