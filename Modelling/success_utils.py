@@ -141,13 +141,13 @@ def get_partial_dependence_plot(model, features, x, y, feature_name, categirical
     )
 
     fig.suptitle(f'Partial dependence plots for {target_cols[y]}')
-    save_dir = f'/workspaces/Crowdfunding-Social-Media-Drivers/Results/02_success_engagement_results/{feature_name}/'
+    save_dir = f'/workspaces/Crowdfunding-Social-Media-Drivers/Results/Results/02_domain-post_results/{feature_name}/'
     
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
     
 
-    plt.savefig(save_dir+ f'partial_dependence_{target_cols[y]}')
+    plt.savefig(save_dir+ f'{feature_name}.png')
     return None
 
 
