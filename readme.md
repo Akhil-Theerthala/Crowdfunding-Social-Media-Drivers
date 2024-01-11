@@ -12,7 +12,29 @@ The project includes the following files:
 
 ## Modelling
 
-The project uses Latent Dirchlet Allocation (LDA) to extract topics from social media post text, which are then used as features in the model.
+The project uses Latent Dirchlet Allocation (LDA) to extract topics from social media post text, which are then used as features in the model. The number of topics is determined using the,
+
+* **Coherence score**, which is a measure of how well the topics are separated from each other;
+* **Topic Diveristy**, which is a measure of how well the topics are distributed across the corpus; and
+* **Perplexity score**, which is a measure of how well the model predicts the corpus. (In the project we used a log_transformed perplexity score, which explains the negative values in the table below. The closer the perplexity is to 1, the better the model.)
+
+The scores for different number of topics are presented in the following table:
+
+| Number of Topics | Coherence Score | Topic Diversity | Perplexity Score |
+| :---: | :---: | :---: | :---: |
+| 13 | 0.419  | 0.959 | -8.907 |
+| 12 | 0.405 | 0.9733 | -8.58 |
+| 11 | 0.393 | 0.9709 | -8.49 |
+| 14 | 0.391| 0.960 |-9.195 |
+| 9 | 0.391 | 0.964 |-8.487 |
+| 8 | 0.389 | 0.985 |-8.468 |
+| 10 | 0.387 | 0.976 |-8.482 |
+| 5 | 0.372 | 0.984 |-8.371 |
+| 4 | 0.340 | 0.990 |-8.291 |
+| 7 | 0.334 | 0.994 |-8.452 |
+| 6 | 0.322 | 0.980 |-8.417 |  
+
+The final choice was the model with 12 topics, because of similar coherence, with higher topic diversity. The perplexity score was also comparitively better than the 13-topic model.
 
 The project follows a two-step modelling approach. The first step involves generating baseline metrics using a custom class, where different models are tested on the same dataset.
 
