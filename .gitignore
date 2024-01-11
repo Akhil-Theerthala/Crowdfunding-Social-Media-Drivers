@@ -7,6 +7,6 @@ Data/Original_dataset/lda_models/*
 !Modelling/Enagement_prediction/*
 */__pycache__/*
 */.ipynb_checkpoints/*
-!Modelling/02_success_engagement/domain_engagement/*.pkl
-!Modelling/02_success_engagement/domain_post/*.pkl
+!Modelling/final_models/02_success_engagement/domain_engagement/*.pkl
+!Modelling/final_models/02_success_engagement/domain_post/*.pkl
 !Data/Original_dataset/lda_models/lda_model_12_topics.html
