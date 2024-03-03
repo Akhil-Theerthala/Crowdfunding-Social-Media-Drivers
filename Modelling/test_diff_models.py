@@ -1,20 +1,21 @@
 import pandas as pd
 import numpy as np
 import warnings
-from sklearn import linear_model, svm, tree, ensemble, neighbors, gaussian_process, kernel_ridge, neural_network, dummy, naive_bayes
+from sklearn import linear_model, svm, tree, ensemble, neighbors, gaussian_process, kernel_ridge, neural_network, dummy, \
+    naive_bayes
 from xgboost import XGBRegressor, XGBClassifier
-from imblearn.ensemble import BalancedRandomForestClassifier, BalancedBaggingClassifier, EasyEnsembleClassifier, RUSBoostClassifier
+from imblearn.ensemble import BalancedRandomForestClassifier, BalancedBaggingClassifier, EasyEnsembleClassifier, \
+    RUSBoostClassifier
 from sklearn import metrics
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, mean_squared_log_error, explained_variance_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, explained_variance_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from tqdm import tqdm
-
 
 warnings.filterwarnings('ignore')
 
 
 class RegressionModels:
-    def __init__(self, x_train, x_test, y_train, y_test, decode = True):
+    def __init__(self, x_train, x_test, y_train, y_test, decode=True):
         self.x_train = x_train
         self.y_train = y_train
         self.x_test = x_test
@@ -26,10 +27,10 @@ class RegressionModels:
             self.multioutput = True
         else:
             self.multioutput = False
-            
+
         self.not_trained_ = []
         self.not_evaluated_ = []
-        self.evaluation_errors_ =[]
+        self.evaluation_errors_ = []
 
         self.top_10_socres = None
         self.all_scores = None
@@ -60,7 +61,6 @@ class RegressionModels:
             'LarsCV': linear_model.LarsCV(),
             'LassoLars': linear_model.LassoLars(),
             'LassoLarsCV': linear_model.LassoLarsCV(),
-            'RANSACRegressor': linear_model.RANSACRegressor(),
             'KNeighborsRegressor': neighbors.KNeighborsRegressor(),
             'GaussianProcessRegressor': gaussian_process.GaussianProcessRegressor(random_state=42),
             'KernelRidge': kernel_ridge.KernelRidge(),
@@ -76,10 +76,7 @@ class RegressionModels:
             'ExtraTreesRegressor': ensemble.ExtraTreesRegressor(random_state=42),
             'HistGradientBoostingRegressor': ensemble.HistGradientBoostingRegressor(random_state=42),
             'MLPRegressor': neural_network.MLPRegressor(),
-            'BayesianRidge': linear_model.BayesianRidge(),
-            'ARDRegression': linear_model.ARDRegression(),
             'DummyRegressor': dummy.DummyRegressor(),
-
 
         }
 
@@ -150,18 +147,17 @@ class RegressionModels:
         model_scores = self.evaluate_models(trained_models)
         model_scores = self.format_scores(model_scores)
 
-        if len(self.not_evaluated_) > 0:    
+        if len(self.not_evaluated_) > 0:
             self.not_evaluated_ = 'The models ' + \
-                ', '.join(list(set(self.not_evaluated_))) + ' could not be evaluated.'
+                                  ', '.join(list(set(self.not_evaluated_))) + ' could not be evaluated.'
         else:
             self.not_evaluated_ = 'All models were evaluated successfully.'
 
         if len(self.not_trained_) > 0:
             self.not_trained_ = 'The models ' + \
-                ', '.join(list(set(self.not_trained_))) + ' could not be trained.'
+                                ', '.join(list(set(self.not_trained_))) + ' could not be trained.'
         else:
             self.not_trained_ = 'All models were trained successfully.'
-
 
         self.top_10_socres = model_scores.head(10)
         self.all_scores = model_scores
@@ -200,7 +196,6 @@ class ClassificationModels:
             'Linear Support Vector Machine': svm.LinearSVC(),
             'Nu-Support Vector Machine': svm.NuSVC(),
             'Decision Tree': tree.DecisionTreeClassifier(),
-            'Random Forest': ensemble.RandomForestClassifier(),
             'K-Nearest Neighbors': neighbors.KNeighborsClassifier(),
             'Gaussian Process': gaussian_process.GaussianProcessClassifier(),
             'Kernel Ridge': kernel_ridge.KernelRidge(),
@@ -237,20 +232,18 @@ class ClassificationModels:
 
                 confusion_matrix = metrics.confusion_matrix(
                     self.y_test, y_pred)
-                
-                #class_wise acc
+
+                # class_wise acc
                 class_wise_acc = {}
                 for i in range(self.n_unique_targets):
                     class_wise_acc[i] = confusion_matrix[i][i] / sum(confusion_matrix[i])
-                
 
-            
-                class_wise_acc_list = [class_wise_acc[i] for i in range(self.n_unique_targets)] 
+                class_wise_acc_list = [class_wise_acc[i] for i in range(self.n_unique_targets)]
 
                 model_scores[model_name] = [
-                    accuracy, precision, recall, f1, roc_auc,
-                    ] + class_wise_acc_list
-                
+                                               accuracy, precision, recall, f1, roc_auc,
+                                           ] + class_wise_acc_list
+
             except ValueError:
                 self.not_evaluated_.append(model_name)
 
@@ -261,15 +254,13 @@ class ClassificationModels:
         model_scores = pd.DataFrame(
             model_scores,
             index=[
-                'Accuracy',
-                'Precision',
-                'Recall',
-                'F1 Score',
-                'ROC AUC',
-                ] + class_wise_acc_labels).T
+                      'Accuracy',
+                      'Precision',
+                      'Recall',
+                      'F1 Score',
+                      'ROC AUC',
+                  ] + class_wise_acc_labels).T
         model_scores = model_scores.sort_values(by='Class-0 Acc', ascending=False)
-
-        
 
         return model_scores
 
@@ -279,9 +270,9 @@ class ClassificationModels:
         model_scores = self.format_scores(model_scores)
 
         self.not_evaluated_ = 'The models' + \
-            ', '.join(list(set(self.not_evaluated_))) + ' could not be evaluated.'
+                              ', '.join(list(set(self.not_evaluated_))) + ' could not be evaluated.'
         self.not_trained_ = 'The models' + \
-            ', '.join(list(set(self.not_trained_))) + ' could not be trained.'
+                            ', '.join(list(set(self.not_trained_))) + ' could not be trained.'
 
         self.top_10_socres = model_scores.head(10)
         self.all_scores = model_scores

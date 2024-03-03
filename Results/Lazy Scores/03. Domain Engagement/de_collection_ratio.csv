@@ -1,0 +1,10 @@
+RandomForestRegressor,1.772,1.226,0.094,0.094
+Lasso,1.776,1.265,0.091,0.095
+LassoLars,1.776,1.265,0.091,0.095
+ElasticNet,1.779,1.253,0.087,0.091
+BayesianRidge,1.786,1.255,0.080,0.085
+OrthogonalMatchingPursuitCV,1.788,1.282,0.078,0.082
+OrthogonalMatchingPursuit,1.788,1.282,0.078,0.082
+ElasticNetCV,1.789,1.251,0.077,0.080
+LassoCV,1.789,1.252,0.077,0.080
+LarsCV,1.790,1.253,0.076,0.079

@@ -1,0 +1,10 @@
+Balanced Random Forest Classifier,0.64,0.97,0.62,0.75,0.72,0.82,0.62
+Gaussian Process,0.13,0.71,0.05,0.09,0.43,0.82,0.05
+Gaussian Naive Bayes,0.54,0.94,0.52,0.67,0.62,0.73,0.52
+Easy Ensemble Classifier,0.57,0.93,0.57,0.70,0.60,0.64,0.57
+RUSBoost Classifier,0.77,0.93,0.81,0.86,0.63,0.45,0.81
+Balanced Bagging Classifier,0.72,0.93,0.75,0.83,0.60,0.45,0.75
+Multinomial Naive Bayes,0.63,0.88,0.68,0.77,0.43,0.18,0.68
+AdaBoost,0.89,0.91,0.97,0.94,0.58,0.18,0.97
+Support Vector Machine,0.90,0.90,1.00,0.95,0.50,0.00,1.00
+Dummy Classifier,0.90,0.90,1.00,0.95,0.50,0.00,1.00
