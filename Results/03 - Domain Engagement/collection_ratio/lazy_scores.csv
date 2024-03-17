@@ -1,0 +1,11 @@
+,Insample RMSE,Insample MAE,Insample R2,Insample EV Score,Outsample RMSE,Outsample MAE,Outsample R2,Outsample EV Score
+RandomForestRegressor,0.744,0.492,0.86,0.86,1.772,1.226,0.094,0.094
+Lasso,1.917,1.298,0.067,0.067,1.776,1.265,0.091,0.095
+LassoLars,1.917,1.298,0.067,0.067,1.776,1.265,0.091,0.095
+ElasticNet,1.904,1.281,0.081,0.081,1.779,1.253,0.087,0.091
+BayesianRidge,1.899,1.275,0.085,0.085,1.786,1.255,0.08,0.085
+OrthogonalMatchingPursuitCV,1.936,1.317,0.049,0.049,1.788,1.282,0.078,0.082
+OrthogonalMatchingPursuit,1.936,1.317,0.049,0.049,1.788,1.282,0.078,0.082
+ElasticNetCV,1.882,1.255,0.102,0.102,1.789,1.251,0.077,0.08
+LassoCV,1.881,1.254,0.102,0.102,1.789,1.252,0.077,0.08
+LarsCV,1.881,1.254,0.103,0.103,1.79,1.253,0.076,0.079

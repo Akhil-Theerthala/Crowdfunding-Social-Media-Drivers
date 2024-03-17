@@ -51,13 +51,13 @@ def evaluate_model_performance(y_test, pred):
     return engagement_scores
 
 def save_model(model, name):
-    save_path = '/workspaces/Crowdfunding-Social-Media-Drivers/Modelling/Enagement_prediction/'
+    save_path = '/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Modelling/final_models/01_Enagement_prediction/'
     joblib.dump(model, save_path+f'/{name}.pkl')
 
     return None
 
 def load_model(name):
-    save_path = '/workspaces/Crowdfunding-Social-Media-Drivers/Modelling/Enagement_prediction/'
+    save_path = '/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Modelling/final_models/01_Enagement_prediction/'
     return joblib.load(save_path+f'/{name}.pkl')
     
 
@@ -107,8 +107,8 @@ def plot_permutation_importance(model, test_inputs, test_outputs):
     plt.title('Permutation Importance')
     plt.ylabel('Importance')
     
-    plt.savefig('/workspaces/Crowdfunding-Social-Media-Drivers/Results/01_engagement_results/feature_importance.png')
-
+    plt.savefig('/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Results/01 - FB Engagement/feature_importance.png')
+    importance_df.to_csv('/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Results/01 - FB Engagement/feature_importance.csv')
     return importance_df
 
 
@@ -133,7 +133,8 @@ def get_partial_dependence_plot(model, features, x, y, feature_name, categirical
     )
 
     fig.suptitle(f'Partial dependence plots for {target_cols[y]}')
-    save_dir = f'/workspaces/Crowdfunding-Social-Media-Drivers/Results/01_engagement_results/{feature_name}/'
+
+    save_dir = f'/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Results/01 - FB Engagement/{feature_name}/'
     
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
