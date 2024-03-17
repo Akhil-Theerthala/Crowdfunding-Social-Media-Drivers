@@ -228,32 +228,47 @@ class ClassificationModels:
 
         return trained_models
 
+    def evaluate_scores_only(self, y_pred, y_true):
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred)
+        recall = recall_score(y_true, y_pred)
+        f1 = f1_score(y_true, y_pred)
+        roc_auc = roc_auc_score(y_true, y_pred)
+
+        confusion_matrix = metrics.confusion_matrix(
+            y_true, y_pred)
+
+        # class_wise acc
+        class_wise_acc = {}
+        for i in range(self.n_unique_targets):
+            class_wise_acc[i] = confusion_matrix[i][i] / sum(confusion_matrix[i])
+
+        class_wise_acc_list = [class_wise_acc[i] for i in range(self.n_unique_targets)]
+
+        return accuracy, precision, recall, f1, roc_auc, class_wise_acc_list
     def evaluate_models(self, trained_models):
         model_scores = {}
         for model_name, model in tqdm(
                 trained_models.items(), desc="Evaluating models"):
             try:
-                y_pred = model.predict(self.x_test)
+                y_pred_in = model.predict(self.x_train)
+                y_pred_out = model.predict(self.x_test)
 
-                accuracy = accuracy_score(self.y_test, y_pred)
-                precision = precision_score(self.y_test, y_pred)
-                recall = recall_score(self.y_test, y_pred)
-                f1 = f1_score(self.y_test, y_pred)
-                roc_auc = roc_auc_score(self.y_test, y_pred)
-
-                confusion_matrix = metrics.confusion_matrix(
-                    self.y_test, y_pred)
-
-                # class_wise acc
-                class_wise_acc = {}
-                for i in range(self.n_unique_targets):
-                    class_wise_acc[i] = confusion_matrix[i][i] / sum(confusion_matrix[i])
-
-                class_wise_acc_list = [class_wise_acc[i] for i in range(self.n_unique_targets)]
+                accuracy_in, precision_in, recall_in, f1_in, roc_auc_in, class_wise_acc_list_in = self.evaluate_scores_only(y_pred_in, self.y_train)
+                accuracy_out, precision_out, recall_out, f1_out, roc_auc_out, class_wise_acc_list_out = self.evaluate_scores_only(y_pred_out, self.y_test)
 
                 model_scores[model_name] = [
-                                               accuracy, precision, recall, f1, roc_auc,
-                                           ] + class_wise_acc_list
+                    accuracy_in,
+                    accuracy_out,
+                    precision_in,
+                    precision_out,
+                    recall_in,
+                    recall_out,
+                    f1_in,
+                    f1_out,
+                    roc_auc_in,
+                    roc_auc_out,
+                                           ] + class_wise_acc_list_in + class_wise_acc_list_out
 
             except ValueError:
                 self.not_evaluated_.append(model_name)
@@ -261,17 +276,27 @@ class ClassificationModels:
         return model_scores
 
     def format_scores(self, model_scores):
-        class_wise_acc_labels = ['Class-{} Acc'.format(i) for i in range(self.n_unique_targets)]
+        class_wise_acc_labels = [f'Class-{i} Acc' for i in range(self.n_unique_targets)]
+        class_wise_acc_labels_in =  [ "Insample_"+ i for i in class_wise_acc_labels]
+        class_wise_acc_labels_out =  [ "Outsample_"+ i for i in class_wise_acc_labels]
+        class_wise_acc_labels = class_wise_acc_labels_in + class_wise_acc_labels_out
+
         model_scores = pd.DataFrame(
             model_scores,
             index=[
-                      'Accuracy',
-                      'Precision',
-                      'Recall',
-                      'F1 Score',
-                      'ROC AUC',
+                      'Insample_Accuracy',
+                      'Outsample_Accuracy',
+                      'Insample_Precision',
+                      'Outsample_Precision',
+                      'Insample_Recall',
+                      'Outsample_Recall',
+                      'Insample_F1 Score',
+                      'Outsample_F1 Score',
+                      'Insample_ROC AUC',
+                      'Outsample_ROC AUC',
+
                   ] + class_wise_acc_labels).T
-        model_scores = model_scores.sort_values(by='Class-0 Acc', ascending=False)
+        model_scores = model_scores.sort_values(by=['Outsample_Class-0 Acc', 'Outsample_Class-1 Acc', 'Insample_Class-0 Acc', 'Insample_Class-1 Acc'], ascending=False)
 
         return model_scores
 
