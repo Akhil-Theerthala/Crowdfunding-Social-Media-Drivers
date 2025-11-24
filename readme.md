@@ -25,14 +25,14 @@ The scores for different number of topics are presented in the following table:
 The final choice was the model with 8 topics, because of similar coherence, with higher topic diversity and better topic-wise Jensen-Shannon Distance. 
 
 Based on the extracted keywords for each topic, the topics were named as follows:
-* **Topic-0**: 'Campaigner Tools & Logistics'
+*** **Topic-0**: 'Campaigner Tools & Logistics'
 * **Topic-1**: 'Sustainable Tech & Hardware Innovation'
 * **Topic-2**: 'Marketing & Strategy'
 * **Topic-3**: 'Consumer Electronics & Home Gadgets'
 * **Topic-4**: 'Social Justice & Civic Engagement'
 * **Topic-5**: 'Emergency Relief & Community Support'
 * **Topic-6**: 'Virtual Events & Educational Webinars'
-* **Topic-7**: 'Electric Mobility & Scientific Innovation
+* **Topic-7**: 'Electric Mobility & Scientific Innovation**
 
 
 The project follows a two-step modelling approach. The first step involves generating baseline metrics using a custom class, where different models are tested on the same dataset.
