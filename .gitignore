@@ -2,11 +2,11 @@
 Reference Code/*
 crowdenv/*
 Data/Original_dataset/lda_models/*
-!Data/Original_dataset/lda_models/12_topics/
+!Data/Original_dataset/lda_models/8_topics/
 !Data/Original_dataset/followers_model.pkl
 !Modelling/final_models/01_Enagement_prediction/*
 */__pycache__/*
 */.ipynb_checkpoints/*
 !Modelling/final_models/03_domain_engagement/*.pkl
 !Modelling/final_models/02_domain_post/*.pkl
-!Data/Original_dataset/lda_models/lda_model_12_topics.html
+!Data/Original_dataset/lda_models/lda_model_8_topics.html

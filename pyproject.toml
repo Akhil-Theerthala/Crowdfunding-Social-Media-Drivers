@@ -1,0 +1,23 @@
+[project]
+name = "crowdfunding-social-media-drivers"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gensim>=4.4.0",
+    "joblib>=1.5.2",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.7",
+    "nltk>=3.9.2",
+    "nrclex>=3.0.0",
+    "numpy>=2.3.5",
+    "pandas>=2.3.3",
+    "pyldavis>=3.4.1",
+    "scikit-learn>=1.7.2",
+    "seaborn>=0.13.2",
+    "spacy>=3.8.11",
+    "spacy-curated-transformers>=0.3.1",
+    "textdescriptives>=2.8.2",
+    "torch>=2.9.1",
+]
