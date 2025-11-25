@@ -7,6 +7,10 @@ from sklearn.preprocessing import RobustScaler
 from sklearn.inspection import permutation_importance, PartialDependenceDisplay
 from sklearn.metrics import mean_squared_error, r2_score, mean_squared_log_error, explained_variance_score
 
+# Configuration - Use relative paths based on this file's location
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RESULTS_DIR = os.path.join(BASE_DIR, 'Results', '01 - FB Engagement')
+MODELS_DIR = os.path.join(BASE_DIR, 'Modelling', 'final_models', '01_Enagement_prediction')
 
 target_cols = ['likes', 'shares', 'comments', 'positive_reactions', 'negative_reactions']
 scalable_features = ['likes_at_posting', 'followers_at_posting']
@@ -19,27 +23,33 @@ def evaluate_model_performance(y_test, pred):
     target_cols = ['likes', 'shares', 'comments', 'positive_reactions', 'negative_reactions']
     engagement_scores = []
     for i in range(5):
+        y_true_i = y_test.values[:, i]
+        y_pred_i = pred[:, i]
+        
+        # Clip predictions to non-negative for MSLE calculation
+        y_pred_clipped = np.clip(y_pred_i, 0, None)
+        y_true_clipped = np.clip(y_true_i, 0, None)
         
         mse = mean_squared_error(
-            y_true=y_test.values[:,i], 
-            y_pred=pred[:,i]
+            y_true=y_true_i, 
+            y_pred=y_pred_i
             )
         rmse = np.sqrt(mse)
 
-
         r2 = r2_score(
-            y_pred=pred[:,i],
-            y_true=y_test.values[:,i]
+            y_pred=y_pred_i,
+            y_true=y_true_i
             )
-            
+        
+        # Use clipped values for MSLE to avoid errors with negative predictions
         msle = mean_squared_log_error(
-            y_pred=pred[:,i],
-            y_true=y_test.values[:,i]
+            y_pred=y_pred_clipped,
+            y_true=y_true_clipped
             )
 
         ev_score = explained_variance_score(
-            y_pred=pred[:,i],
-            y_true=y_test.values[:,i]
+            y_pred=y_pred_i,
+            y_true=y_true_i
         )
 
         engagement_scores.append([rmse, r2, msle, ev_score])
@@ -51,20 +61,36 @@ def evaluate_model_performance(y_test, pred):
     return engagement_scores
 
 def save_model(model, name):
-    save_path = '/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Modelling/final_models/01_Enagement_prediction/'
-    joblib.dump(model, save_path+f'/{name}.pkl')
-
+    os.makedirs(MODELS_DIR, exist_ok=True)
+    joblib.dump(model, os.path.join(MODELS_DIR, f'{name}.pkl'))
     return None
 
 def load_model(name):
-    save_path = '/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Modelling/final_models/01_Enagement_prediction/'
-    return joblib.load(save_path+f'/{name}.pkl')
+    return joblib.load(os.path.join(MODELS_DIR, f'{name}.pkl'))
     
 
 
-def pre_process(x):
-    scaler = RobustScaler()
-    x.loc[:,scalable_features] = scaler.fit_transform(x.loc[:,scalable_features])
+def pre_process(x, scaler=None, fit_scaler=True):
+    """
+    Preprocess features for engagement prediction.
+    
+    Args:
+        x: DataFrame of features
+        scaler: Optional pre-fitted RobustScaler. If None and fit_scaler=True, creates new scaler.
+        fit_scaler: If True, fit the scaler on data. If False, use provided scaler to transform only.
+    
+    Returns:
+        Tuple of (processed_features, scaler) to prevent data leakage between train/test
+    """
+    x = x.copy()
+    
+    if fit_scaler:
+        scaler = RobustScaler()
+        x.loc[:, scalable_features] = scaler.fit_transform(x.loc[:, scalable_features])
+    else:
+        if scaler is None:
+            raise ValueError("scaler must be provided when fit_scaler=False")
+        x.loc[:, scalable_features] = scaler.transform(x.loc[:, scalable_features])
 
     x = pd.concat([x, pd.get_dummies(x.type, prefix='type', drop_first=True).astype(int)], axis=1).drop('type', axis=1)
     x = pd.concat([x, pd.get_dummies(x.page_name, prefix='page_name').astype(int)], axis=1).drop('page_name', axis=1)
@@ -72,7 +98,7 @@ def pre_process(x):
         x[f'entity_{entity}'] = x.entities_identified.fillna('None').str.split(',').apply(lambda entity_list: entity in entity_list).astype(int)
     
     x = x.drop('entities_identified', axis=1)
-    return x
+    return x, scaler
 
 
 def process_targets(y):
@@ -81,8 +107,9 @@ def process_targets(y):
     return y
 
 def decode_targets(y):
+    """Decode log-transformed targets back to original scale, ensuring non-negative values."""
     y = y.copy()
-    y = np.exp(y)-1
+    y = np.clip(np.exp(y) - 1, 0, None)
     return y
 
 
@@ -107,8 +134,9 @@ def plot_permutation_importance(model, test_inputs, test_outputs):
     plt.title('Permutation Importance')
     plt.ylabel('Importance')
     
-    plt.savefig('/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Results/01 - FB Engagement/feature_importance.png')
-    importance_df.to_csv('/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Results/01 - FB Engagement/feature_importance.csv')
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    plt.savefig(os.path.join(RESULTS_DIR, 'feature_importance.png'))
+    importance_df.to_csv(os.path.join(RESULTS_DIR, 'feature_importance.csv'))
     return importance_df
 
 
@@ -134,13 +162,10 @@ def get_partial_dependence_plot(model, features, x, y, feature_name, categirical
 
     fig.suptitle(f'Partial dependence plots for {target_cols[y]}')
 
-    save_dir = f'/home/theerthala/Documents/repos/Crowdfunding-Social-Media-Drivers/Results/01 - FB Engagement/{feature_name}/'
-    
-    if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
-    
+    save_dir = os.path.join(RESULTS_DIR, feature_name)
+    os.makedirs(save_dir, exist_ok=True)
 
-    plt.savefig(save_dir+ f'partial_dependence_{target_cols[y]}')
+    plt.savefig(os.path.join(save_dir, f'partial_dependence_{target_cols[y]}'))
     return None
 
 

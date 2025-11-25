@@ -94,8 +94,9 @@ class RegressionModels:
         return trained_models
 
     def decode_targets(self, y):
+        """Decode log-transformed targets back to original scale, ensuring non-negative values."""
         y = y.copy()
-        y = np.exp(y) - 1
+        y = np.clip(np.exp(y) - 1, 0, None)
         return y
 
     def evaluate_models(self, trained_models):
